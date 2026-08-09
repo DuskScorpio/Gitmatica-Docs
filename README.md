@@ -20,5 +20,6 @@ Future plans live only in `future-feats/`, with one feature per document:
 - [Scalable hash indexes](future-feats/scalable-hash-indexes.md)
 - [Direct Litematic project import](future-feats/direct-litematic-project-import.md)
 - [Manual origin export](future-feats/manual-origin-export.md)
+- [Sub-region diff visualization](future-feats/sub-region-diff-visualization.md)
 - [Consistent operation preflights](future-feats/consistent-operation-preflights.md)
 - [Full-project commit scope](future-feats/full-project-commit-scope.md)
