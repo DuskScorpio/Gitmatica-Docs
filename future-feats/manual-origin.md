@@ -1,152 +1,129 @@
 # Manual Origin
 
-## Behavior
+## Model
 
-- Each site versions its own export origin.
-- **Automatic:** use the component-wise minimum XYZ across the exported
-  commit's subregion boxes, not its non-air content.
-- **Manual:** use a position relative to Gitmatica's fixed project origin, not
-  the bounds minimum. It may be outside all subregion bounds.
-- This only affects Gitmatica `.litematic` export. It does not replace or modify
-  the tracking placement's existing world origin, overlay positioning,
-  verification, Change Viewer, or normal Litematica schematics.
-
-## Coordinates
-
-The editor uses world coordinates, but only the project-relative value is
-stored:
+Each site versions one `manual_origin: [x, y, z]` relative to Gitmatica's fixed
+project origin. It is always a coordinate, never an enabled/disabled mode, and
+does not affect the tracking placement, overlay, verification, or Change
+Viewer.
 
 ```text
-world  = placement origin + stored origin
-stored = world - placement origin
-exported subregion position = project-relative position - stored origin
+world marker = placement origin + manual_origin
+exported region position = project-relative position - manual_origin
 ```
 
-Moving the local placement updates the displayed value without dirtying the
-repository. The `.litematic` stores the resulting relative subregion offsets,
-never a real world position.
+Moving the local placement moves the marker without dirtying the repository.
 
-## Storage And Migration
+## Storage
 
-This feature depends on the repository migration framework and introduces
-`lvc-manifest-v2`. Each site optionally stores `manual_origin: [x, y, z]`.
-Presence means Manual; absence means Automatic. There is no separate boolean or
-dormant position.
+The migration framework introduces `lvc-manifest-v2` and stores
+`manual_origin` per site.
 
-- New projects use v2.
-- Newer Gitmatica versions read v1 and v2; migration never rewrites history.
-- V1 sites load as Automatic without being rewritten; historical v1 commits
-  remain exportable.
-- First applying Manual Origin in a v1 project upgrades its working manifest.
-- Disabling it before any v2 commit restores v1 when no other v2-only data
-  requires v2, while preserving unrelated changes.
-- Committed v2 projects are never automatically downgraded.
-- Older Gitmatica versions must reject v2 instead of dropping its data.
+- New projects use v2 with `[0, 0, 0]`, regardless of the source selection's
+  origin mode.
+- V1 sites read as `[0, 0, 0]` without rewriting history.
+- Applying a changed origin upgrades a v1 working manifest. Once introduced,
+  v2 and the field remain even if the origin returns to zero.
+- Older Gitmatica versions reject v2 rather than dropping its data.
+- Origin edits participate in dirty, commit, discard, checkout, undo, history,
+  and merge behavior, but never create Change Viewer entries.
 
-Applied edits participate in normal dirty, commit, discard, checkout, undo,
-history, and merge behavior. They do not add a Change Viewer entry.
-
-## Project Creation
-
-- A source Litematica selection with an explicit origin creates Manual mode at
-  project-relative `(0, 0, 0)`.
-- A source selection without one creates Automatic mode.
-- Empty-site creation is out of scope while that creation path is disabled.
+Exclude `manual_origin` from tracking-overlay content and identity. Historical
+overlays remain anchored to their existing fixed project origin.
 
 ## Project Editor
 
-- Keep Placement Origin unchanged.
-- Keep the Manual Origin toggle and a second inline world-XYZ editor labeled
-  **Export Origin**, with normal nudge controls and **Move to Player**. Do not
-  provide Reset.
-- Reflow both origin editors on narrow screens.
-- Disable all Manual Origin controls unless Tool Mode 10 has an active current
-  Gitmatica overlay and Litematica's Execute Operation hotkey is bound.
-- While enabled, the controls edit the Tool Mode 10 draft instead of the working
-  manifest. Show status directing the user to the configured Execute Operation
-  hotkey.
-- Hide XYZ and Move to Player while the draft mode is Automatic.
-- Enabling Manual mode copies the current working bounds minimum. Disabling it
-  removes the draft position. Move to Player uses the player's block position.
+Keep **Placement Origin** unchanged. Add a world-coordinate **Manual Origin**
+XYZ editor with normal nudge controls and **Move to Player**. Reflow both origin
+editors on narrow screens.
+
+Add **Show Manual Origin**, remembered client-locally per project and never
+written to the project repository. It only controls in-world visibility and
+does not change focus, drafts, or export behavior.
+
+- The visibility toggle works in every tool mode.
+- Origin controls remain visible but read-only while the marker is hidden,
+  Tool Mode 10 is inactive, or Execute Operation is unbound.
+- Selecting an editable origin control focuses the origin and discards any
+  pending subregion draft.
+- Hiding the marker preserves an existing origin draft.
+- Execute Operation inside Project Editor does nothing.
 
 ## In-Game Editing
 
-Tool Mode 10 (**Edit Subregions**) exposes the current subregion and manual
-origin through one Gitmatica-owned transient Litematica `AreaSelection`:
+When shown, render every enabled loaded project's working origin in
+Litematica's normal orange in every tool mode. Outside Tool Mode 10 it is
+view-only.
 
-- Include the selected subregion box when one is focused.
-- Include the explicit origin only while the site or draft is in Manual mode.
-- Allow an origin-only selection when no subregion is focused.
-- Use Litematica's normal middle-click selection, tool-click movement, nudging,
-  selected cyan, and unselected orange origin rendering.
-- At a shared hit position, prefer the focused subregion's corner, then the
-  origin, then other shared corners in alphabetical order.
+Tool Mode 10 (**Edit Subregions**) exposes either one subregion or the origin
+through Gitmatica's transient Litematica selection:
 
-Switching subregions discards the previous bounds draft and recreates that box
-from the working manifest, but preserves the site-level origin draft. Leaving
-Tool Mode 10, selecting another overlay, or unloading the world discards all
-remaining drafts.
+- Selecting the origin discards the subregion draft; selecting a subregion
+  discards the origin draft.
+- Use Litematica's normal middle-click selection, tool movement, nudging,
+  selected cyan, and depth testing.
+- Prefer the focused target at shared hits, then the visible origin, then other
+  subregion corners alphabetically.
+- Block add/delete-box, set/delete-origin, and whole-selection translation.
+  Origins and subregions must move independently.
 
-### Apply
+Use Litematica's configured Execute Operation hotkey as the only apply action
+and respect `executeRequireTool`. If unbound, editing is read-only and an edit
+attempt shows an error explaining that the hotkey must be bound.
 
-Use Litematica's configured Execute Operation hotkey as Tool Mode 10's only
-apply action; remove the hard-coded Enter action and respect Litematica's
-`executeRequireTool` setting. If the hotkey is unbound, disable editing and show
-binding guidance.
+Only a genuinely changed draft blocks local repository mutations. Read-only
+history, inspection, verification, and export remain available. Leaving Tool
+Mode 10, changing overlays, or unloading the world cancels the draft.
 
-One press atomically validates and applies the current subregion bounds plus the
-origin mode and position. Apply neither on failure and retain the drafts for
-correction. Use concise actionbar messages for success, failure, and no pending
-changes.
-
-Block Save Version, checkout, discard, merge, and other repository-changing
-operations while a draft is pending, with guidance to apply it or leave Tool
-Mode 10 to cancel it.
+Match Litematica's signed `BlockPos` coordinate freedom, including negative and
+out-of-world positions, but reject arithmetic overflow before apply or export.
 
 ## Applied Move Indicator
 
-After a successful origin move, compare HEAD's effective origin with the
-applied working origin. HEAD's effective origin is its manual position, or its
-committed bounds minimum when Automatic.
+After apply, compare HEAD's coordinate with the working coordinate:
 
-- Keep the current origin in Litematica's normal unselected orange.
-- Render the old origin as a darker-pink block outline and draw a matching
-  directional arrow from it to the current origin.
-- Depth-test the old marker and arrow like Litematica's normal origin.
-- Keep HEAD as the source across repeated applies and update the working
-  destination.
-- Hide the indicator while another origin position is pending; show only the
-  selected cyan draft until it is applied.
-- Show no indicator when Manual mode is off or both positions coincide.
+- Keep the working origin orange and render the old HEAD origin as a
+  depth-tested darker-pink outline.
+- Show both in every tool mode whenever **Show Manual Origin** is enabled.
+- During a pending origin move, show only the selected cyan draft.
+- Render no arrow and no old marker when the coordinates match.
+- Suppress the Gitmatica placement-origin marker when it overlaps the manual
+  origin marker.
 
-The indicator appears only in Tool Mode 10. It is derived from HEAD and the
-working manifest, so it reappears after re-entering the mode and disappears
-after commit or discard.
+Derive markers from HEAD and the working manifest so they survive relogging and
+disappear after commit or discard without opening Project Manager. Render all
+projects whose local visibility setting is enabled.
 
 ## Export
 
-Build every export entirely from one committed revision, including its regions,
-blocks, entities, and origin:
+Every Gitmatica export opens a popup with:
 
-- Project Manager exports the selected commit.
-- A loaded schematic row exports the committed revision it represents.
-- Parent and historical previews export their displayed revision.
-- A current or dirty hybrid overlay exports HEAD and silently ignores working
-  changes.
+- An editable filename prefilled as `project-shortcommit.litematic`.
+- **Use Manual Origin**, unchecked each time.
+- Overwrite confirmation when the destination exists.
 
-Name the file with the existing project-name plus short-commit-ID convention,
-using the exact exported commit. Do not add a dirty-state prompt.
+Unchecked exports omit the explicit selection origin, making Litematica use the
+component-wise minimum of the exported revision's subregion bounds. Checked
+exports use that revision's `manual_origin`; v1 revisions use `[0, 0, 0]`.
+
+Always rebuild the exact represented commit. Project Manager exports its
+selected commit, parent and historical rows export their displayed commit, and
+a dirty current overlay exports HEAD while ignoring working changes.
 
 ## Merge
 
-Treat each site's state—Automatic or Manual at one complete XYZ position—as one
-atomic value:
+Merge each site's complete XYZ coordinate atomically. Missing v1 and v2 zero
+are semantically equal. Keep equal values or a one-sided change; conflict only
+when both sides move the same site's origin differently. Resolve conflicts with
+the existing global Base/Yours/Incoming choice. Format upgrades are not merge
+conflicts, and v2 remains sticky once introduced.
 
-- Keep equal states or the only side changed from the base.
-- Merge independent site, subregion, and block changes normally.
-- Conflict when both sides change one site's state differently, including
-  Automatic versus moved, different points, or edits to different axes.
+## Verification
 
-Use the existing global Base/Yours/Incoming popup. Its selected side supplies
-the complete origin state; do not add an origin-specific dialog. Automatic
-stores no position.
+- Cover v1/v2 loading, sticky upgrades, round trips, and atomic merges.
+- Cover automatic/manual exact-revision exports, negative and outside-bounds
+  origins, filenames, and overwrite confirmation.
+- Cover exclusive focus, hotkey gating, GUI no-op behavior, draft blocking,
+  marker visibility, relog restoration, multiple projects, and placement moves.
+- Confirm origin edits never change overlay identity, placement geometry,
+  verification, or Change Viewer output.
