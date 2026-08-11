@@ -34,11 +34,15 @@ user explicitly requests an upstream Litematica change.
   while that mode is active, hides regular selection IDs, and blocks changing
   the regular selection. Never insert the transient selection into Litematica's
   stored-selection maps.
+- The transient selection can represent either a one-box sub-region or a
+  box-free explicit manual origin. A selected manual-origin draft uses
+  Litematica's cyan selection rendering; applied working origins render orange,
+  and a differing HEAD origin remains visible in yellow.
 - `MixinDataManager` clears the edit session on tool-mode transitions, while
   `MixinKeyCallbackHotkeys` resolves clicks on other tracking-overlay corners
   before allowing Litematica's normal corner-edit behavior.
-- Corner-hit candidates are sorted by sub-region name. Equal-distance shared
-  corners intentionally retain the alphabetically first candidate.
+- Equal-distance shared hits prefer the focused target, then the visible manual
+  origin, then the alphabetically first sub-region.
 
 ## Known Race Fix
 

@@ -99,7 +99,7 @@ Example:
 
 ```json
 {
-  "format": "lvc-manifest-v1",
+  "format": "lvc-manifest-v2",
   "name": "gold_farm",
   "sites": [
     {
@@ -113,6 +113,7 @@ Example:
           "size": [32, 16, 32]
         }
       ],
+      "manual_origin": [0, 0, 0],
       "hash_index": "indexes/overworld_main.lvcidx"
     },
     {
@@ -126,6 +127,7 @@ Example:
           "size": [128, 8, 128]
         }
       ],
+      "manual_origin": [0, 0, 0],
       "hash_index": "indexes/nether_roof.lvcidx"
     }
   ]
@@ -134,6 +136,10 @@ Example:
 
 Required rules:
 
+- `lvc-manifest-v2` is the current format and requires one
+  `manual_origin: [x, y, z]` per site, relative to the fixed project origin.
+- `lvc-manifest-v1` remains readable and is interpreted as a zero manual
+  origin. Applying an origin edit upgrades the working manifest to v2.
 - `site.id` is a stable opaque ID, not a display name.
 - `site.name` is user-facing and may be renamed.
 - `region.name` is both the user-facing name and the exact sub-region identity.

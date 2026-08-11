@@ -1,5 +1,11 @@
 # Manual Origin
 
+## Implementation Status
+
+Manual-origin storage, Project Editor controls, Edit Project interaction,
+working/HEAD markers, and merge behavior are implemented. Pending-draft
+mutation blocking and the export behavior described below remain deferred.
+
 ## Model
 
 Each site versions one `manual_origin: [x, y, z]` relative to Gitmatica's fixed
@@ -68,8 +74,7 @@ through Gitmatica's transient Litematica selection:
   Origins and subregions must move independently.
 
 Use Litematica's configured Execute Operation hotkey as the only apply action
-and respect `executeRequireTool`. If unbound, editing is read-only and an edit
-attempt shows an error explaining that the hotkey must be bound.
+and respect `executeRequireTool`. If unbound, editing is read-only.
 
 Only a genuinely changed draft blocks local repository mutations. Read-only
 history, inspection, verification, and export remain available. Leaving Tool
@@ -83,7 +88,7 @@ out-of-world positions, but reject arithmetic overflow before apply or export.
 After apply, compare HEAD's coordinate with the working coordinate:
 
 - Keep the working origin orange and render the old HEAD origin as a
-  depth-tested darker-pink outline.
+  depth-tested yellow outline.
 - Show both in every tool mode whenever **Show Manual Origin** is enabled.
 - During a pending origin move, show only the selected cyan draft.
 - Render no arrow and no old marker when the coordinates match.
@@ -95,6 +100,8 @@ disappear after commit or discard without opening Project Manager. Render all
 projects whose local visibility setting is enabled.
 
 ## Export
+
+This section is planned and is not part of the current implementation.
 
 Every Gitmatica export opens a popup with:
 

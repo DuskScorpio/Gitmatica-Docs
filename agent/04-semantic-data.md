@@ -13,7 +13,9 @@ Use `docs/tech/lvc-semantic-storage.md` as the durable format reference.
 ## Main Types
 
 - `LvcManifest`: project/sites/regions/index refs.
-- `LvcManifest.Site`: one placed coordinate space.
+- `LvcManifest.Site`: one placed coordinate space, including its versioned
+  project-relative manual origin. V1 reads as zero; an origin edit upgrades the
+  working manifest to v2.
 - `LvcManifest.Region`: tracked region inside a site.
 - `LvcSitePlacement`: dimension plus origin DTO.
 - `LvcChunk`: canonical block-state/block-entity/entity payload.
@@ -45,3 +47,8 @@ Use `docs/tech/lvc-semantic-storage.md` as the durable format reference.
 - `LvcCanonicalNbt`: canonicalizes NBT for stable hashing.
 
 Do not hand-edit versioned semantic files with ad hoc strings. Use these owners.
+
+Manual-origin changes are repository metadata. They participate in dirty,
+commit, discard, checkout, undo, and three-way merge behavior, but must not
+affect tracked chunk hashes, overlay identity, verification, or Change Viewer
+entries.

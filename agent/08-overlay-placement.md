@@ -26,18 +26,24 @@ Supporting ownership is intentionally split:
 - No project-repo placement persistence.
 - Loaded placement list persistence belongs to Litematica.
 - Project editor origin edits call into placement-origin update flow.
+- Manual origin is separate versioned site metadata. Its world marker is the
+  loaded placement origin plus the project-relative manual origin; moving it
+  must not move or rebuild the tracking placement.
 - Project Editor sub-region selection is optional single-selection Litematica
   placement state. Keep the editor list, configure hotkey, and placement
   selection synchronized, including the intentional no-selection state, and
   preserve a valid selection while replacing an overlay during a rebuild.
 - Edit Project mode exposes the selected current-revision tracking-overlay
-  sub-region as a transient, one-box `AreaSelection`. The selection is owned by
-  Gitmatica, is never registered with or persisted by Litematica's selection
-  manager, and must not appear in Litematica's area-selection browser.
-- Enter applies the transient box as project-relative bounds and schedules the
-  normal working-tree overlay rebuild. Switching modes, unloading the world, or
-  middle-clicking another sub-region corner discards any unapplied transient
-  bounds. Shared corners resolve by sub-region name in alphabetical order.
+  sub-region or manual origin as a transient `AreaSelection`. Sub-regions use
+  one box; the manual origin uses the explicit selection origin with no boxes.
+  The selection is owned by Gitmatica, is never registered with or persisted by
+  Litematica's selection manager, and must not appear in Litematica's
+  area-selection browser.
+- Execute Operation applies the transient target. Sub-region bounds schedule
+  the normal working-tree overlay rebuild; manual-origin changes update only
+  versioned metadata and its marker. Switching modes, unloading the world, or
+  selecting another target discards the unapplied draft. Shared hits prefer the
+  focused target, then the visible origin, then sub-regions alphabetically.
 - Edit Project mode must ignore regular Litematica area selections and do
   nothing without a selected current Gitmatica tracking overlay. Parent-revision
   previews and unrelated schematic placements are not editable through it.
@@ -69,6 +75,8 @@ Supporting ownership is intentionally split:
   identity hash. The identity covers the source revision, site, dimension,
   placement origin, loot-preview context, Minecraft data version, and cache
   format version.
+- Manual origin is deliberately excluded from the generated tracking-overlay
+  identity because it does not change schematic content or placement geometry.
 - Do not rely on path equality to a single fixed file.
 - Keep cache and descriptor writes atomic/crash-resistant.
 - Retain up to four recently used entries and 512 MiB per project. Prune only
