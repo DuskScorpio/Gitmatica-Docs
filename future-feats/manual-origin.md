@@ -55,7 +55,7 @@ When shown, render every enabled loaded project's working origin in
 Litematica's normal orange in every tool mode. Outside Tool Mode 10 it is
 view-only.
 
-Tool Mode 10 (**Edit Subregions**) exposes either one subregion or the origin
+Tool Mode 10 (**Edit Project**) exposes either one subregion or the origin
 through Gitmatica's transient Litematica selection:
 
 - Selecting the origin discards the subregion draft; selecting a subregion

@@ -30,7 +30,7 @@ Supporting ownership is intentionally split:
   placement state. Keep the editor list, configure hotkey, and placement
   selection synchronized, including the intentional no-selection state, and
   preserve a valid selection while replacing an overlay during a rebuild.
-- Edit Subregions mode exposes the selected current-revision tracking-overlay
+- Edit Project mode exposes the selected current-revision tracking-overlay
   sub-region as a transient, one-box `AreaSelection`. The selection is owned by
   Gitmatica, is never registered with or persisted by Litematica's selection
   manager, and must not appear in Litematica's area-selection browser.
@@ -38,7 +38,7 @@ Supporting ownership is intentionally split:
   normal working-tree overlay rebuild. Switching modes, unloading the world, or
   middle-clicking another sub-region corner discards any unapplied transient
   bounds. Shared corners resolve by sub-region name in alphabetical order.
-- Edit Subregions mode must ignore regular Litematica area selections and do
+- Edit Project mode must ignore regular Litematica area selections and do
   nothing without a selected current Gitmatica tracking overlay. Parent-revision
   previews and unrelated schematic placements are not editable through it.
 - Closing a project drops Gitmatica's remembered placement state.

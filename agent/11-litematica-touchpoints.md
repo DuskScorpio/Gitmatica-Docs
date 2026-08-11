@@ -22,10 +22,14 @@ user explicitly requests an upstream Litematica change.
 - Addon render/lifecycle hooks live under `me.soullessjump.lvc.mixin.render` and
   `me.soullessjump.lvc.mixin.lifecycle`.
 
-## Edit Subregions Tool Mode
+## Edit Project Tool Mode
 
-- `MixinToolMode` appends Gitmatica's runtime-only `EDIT_SUBREGIONS` enum value;
-  keep its serialized name stable and retain Litematica's normal cycling/HUD.
+- `MixinToolMode` appends Gitmatica's runtime-only `EDIT_PROJECT` enum value;
+  use `edit_project` as its serialized name and retain Litematica's normal
+  cycling behavior.
+- `MixinToolHud` gives Edit Project the normal placement summary followed by
+  singular Corner Mode and Mode lines. Modified flags include applied placement
+  and HEAD-to-working structural changes, never unapplied transient box edits.
 - `MixinSelectionManager` supplies the transient Gitmatica `AreaSelection` only
   while that mode is active, hides regular selection IDs, and blocks changing
   the regular selection. Never insert the transient selection into Litematica's
