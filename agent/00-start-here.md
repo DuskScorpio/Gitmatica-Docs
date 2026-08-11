@@ -28,6 +28,7 @@ Use these docs as a routing table, not as a replacement for source.
 - Overlay lifecycle: `src/main/java/me/soullessjump/lvc/overlay/LvcTrackingOverlayService.java`
 - Semantic repository: `src/main/java/me/soullessjump/lvc/storage/LvcSemanticRepository.java`
 - Long operations: `src/main/java/me/soullessjump/lvc/task/`
+- Project TODO and follow-up status: `docs/TODO.md`
 - Future feature plans: `docs/future-feats/`
 - Main Gitmatica screen: `src/main/java/me/soullessjump/lvc/gui/GuiLvcProjectManager.java`
 - Project editor: `src/main/java/me/soullessjump/lvc/gui/GuiLvcProjectEditor.java`
