@@ -71,6 +71,9 @@ Supporting ownership is intentionally split:
 ## Cache Rules
 
 - Use generated overlay files and descriptor metadata.
+- Treat the descriptor schema as exact disposable-cache metadata. Missing or
+  unsupported descriptor schemas invalidate the cache and rebuild it; they are
+  never migrated as repository data.
 - Generated file names use the 8-character source commit token plus a stable
   identity hash. The identity covers the source revision, site, dimension,
   placement origin, loot-preview context, Minecraft data version, and cache

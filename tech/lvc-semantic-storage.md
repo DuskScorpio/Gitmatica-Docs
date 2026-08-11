@@ -162,6 +162,26 @@ Overlap policy:
 - Direct Litematic import semantics, including overlap conflicts, are defined in
   `docs/future-feats/direct-litematic-project-import.md`.
 
+### Manifest Schema Evolution
+
+- `LvcManifest` is the current canonical runtime model and never carries a wire
+  format string.
+- `LvcManifestDocument` retains the decoded schema beside that model only at the
+  storage and merge boundaries.
+- Each supported schema has an explicit wire DTO. Readers decode old DTOs into
+  the canonical model; domain editing and comparison never serialize a fake
+  older manifest to select fields.
+- Existing working files write with the greater of their source schema and the
+  minimum schema required by the updated model. This keeps unrelated v1 edits
+  on v1, upgrades a nonzero manual origin to v2, and prevents implicit
+  downgrades after the origin returns to zero.
+- New repositories write the current schema. Reads alone never rewrite a file,
+  and historical commits are decoded in place rather than migrated.
+- Three-way merges preserve the highest schema found in the base, current, and
+  incoming documents while comparing typed semantic projections.
+- Unsupported future schemas fail before any related manifest or hash-index
+  write begins.
+
 ## Placement State
 
 Gitmatica does not write clone-local placement files into the project repository.
@@ -201,6 +221,12 @@ raw_payload        bytes     canonical chunk content
 ```
 
 The storage layer intentionally does not pre-compress chunk storage so Git can delta-compress similar object blobs across history. The raw wrapper is not part of the semantic object ID because object IDs hash canonical content.
+
+The current chunk payload does not persist Minecraft `DataVersion`. The
+[DataVersion-aware chunk plan](../future-feats/minecraft-data-versioned-chunks.md)
+owns the required object-version, data-fixing, fingerprint, rollout, and
+compatibility work. Do not attach `DataVersion` only to the manifest or write it
+without those conversion semantics.
 
 Encoding primitives:
 

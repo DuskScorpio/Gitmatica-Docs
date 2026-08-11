@@ -12,10 +12,13 @@ Use `docs/tech/lvc-semantic-storage.md` as the durable format reference.
 
 ## Main Types
 
-- `LvcManifest`: project/sites/regions/index refs.
-- `LvcManifest.Site`: one placed coordinate space, including its versioned
-  project-relative manual origin. V1 reads as zero; an origin edit upgrades the
-  working manifest to v2.
+- `LvcManifest`: current canonical project/sites/regions/index model. It does
+  not contain storage schema provenance or codec settings.
+- `LvcManifestDocument` pairs a canonical manifest with the source/write
+  `LvcManifestSchema` at the storage boundary.
+- `LvcManifest.Site`: one placed coordinate space, including its
+  project-relative manual origin. V1 reads as zero; the manifest store upgrades
+  a v1 write to v2 when a nonzero origin first requires it.
 - `LvcManifest.Region`: tracked region inside a site.
 - `LvcSitePlacement`: dimension plus origin DTO.
 - `LvcChunk`: canonical block-state/block-entity/entity payload.
@@ -38,6 +41,8 @@ Use `docs/tech/lvc-semantic-storage.md` as the durable format reference.
 ## Storage Owners
 
 - `LvcSemanticRepository`: writes/reads manifests, indexes, commits.
+- `storage.manifest`: version-specific manifest wire DTOs, schema selection,
+  and atomic manifest I/O.
 - `LvcRepository`: lower-level repo helpers.
 - `LvcChunkCodec`: deterministic chunk codec.
 - `LvcHashIndexCodec`: full/tracked hash index codec.
@@ -52,3 +57,9 @@ Manual-origin changes are repository metadata. They participate in dirty,
 commit, discard, checkout, undo, and three-way merge behavior, but must not
 affect tracked chunk hashes, overlay identity, verification, or Change Viewer
 entries.
+
+Manifest reads decode every supported schema into the canonical model without
+rewriting history. Existing writes preserve their schema floor, upgrade to the
+minimum schema required by the result, and never downgrade implicitly. New
+manifests use the current schema. Merge results preserve the highest schema of
+their base, current, and incoming documents.

@@ -10,16 +10,30 @@ This directory keeps maintainer and agent documentation close to the code.
 For test work, always begin with the testing handbook. It identifies the
 smallest relevant lane and the authoritative evidence produced by that lane.
 
-## Future Feature Plans
+## Future Feature TODO
 
-Future plans live only in `future-feats/`, with one feature per document:
+This is the canonical future-feature index. Update the status here whenever a
+plan is added, implemented, reduced to follow-up work, or removed. Detailed
+plans live only in `future-feats/`, with one feature per document.
+
+Planned:
 
 - [Intelligent move detection](future-feats/intelligent-move-detection.md)
 - [Component-aware inventory comparison](future-feats/component-aware-inventory-comparison.md)
 - [Nested container inventory preview](future-feats/nested-container-inventory-preview.md)
-- [Scalable hash indexes](future-feats/scalable-hash-indexes.md)
 - [Direct Litematic project import](future-feats/direct-litematic-project-import.md)
-- [Manual origin export](future-feats/manual-origin-export.md)
-- [Sub-region diff visualization](future-feats/sub-region-diff-visualization.md)
+- [Version export flow](future-feats/export-flow.md)
 - [Consistent operation preflights](future-feats/consistent-operation-preflights.md)
 - [Full-project commit scope](future-feats/full-project-commit-scope.md)
+- [Minecraft DataVersion-aware chunks](future-feats/minecraft-data-versioned-chunks.md)
+
+Conditional on measurement:
+
+- [Scalable hash indexes](future-feats/scalable-hash-indexes.md)
+
+Implemented with deferred follow-ups:
+
+- [Manual origin](future-feats/manual-origin.md) — Export integration and
+  pending-draft mutation blocking remain.
+- [Subregion diff visualization](future-feats/sub-region-diff-visualization.md)
+  — Coincident-outline presentation remains.

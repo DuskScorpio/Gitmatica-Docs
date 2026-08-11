@@ -13,6 +13,9 @@ These docs are for agents, not users.
 - Keep all future feature plans under `docs/future-feats/`.
 - Give each future feature its own document. Other docs may link to that file,
   but must not duplicate its plan.
+- Treat the Future Feature TODO in `docs/README.md` as the canonical plan index.
+  Update its status whenever a plan is added, implemented, narrowed to
+  follow-up work, or deleted.
 
 ## Commit Messages
 

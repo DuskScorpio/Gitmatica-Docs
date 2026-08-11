@@ -49,8 +49,10 @@ upstream Litematica change.
   recreate a root-level service result namespace.
 - Git history, branches, remotes, merge, undo, and tree reads are called through
   their focused `git` owners. There is no `LvcProjectGitOps` facade.
-- Storage codecs use `LvcContentFormat`, `LvcBinaryIO`, `LvcAtomicFiles`, and
-  `LvcManifestJsonCodec` rather than embedding duplicate format/I/O logic.
+- Storage codecs use `LvcContentFormat`, `LvcBinaryIO`, and `LvcAtomicFiles`
+  rather than embedding duplicate format/I/O logic. Manifest schema dispatch,
+  wire DTOs, schema provenance, and atomic JSON writes live under
+  `storage.manifest`.
 
 ## Docs Source Of Truth
 
