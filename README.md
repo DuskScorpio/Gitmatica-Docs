@@ -7,6 +7,8 @@ This directory keeps maintainer and agent documentation close to the code.
 - [Addon migration architecture](migration/architecture.md) — dependency and
   ownership boundaries for the standalone Gitmatica addon.
 - [Project TODO](TODO.md) — canonical backlog and follow-up status index.
+- [Design ideas](ideas/README.md) — unconfirmed explorations that are not part
+  of the planned backlog.
 
 For test work, always begin with the testing handbook. It identifies the
 smallest relevant lane and the authoritative evidence produced by that lane.

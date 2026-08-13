@@ -13,6 +13,8 @@ These docs are for agents, not users.
 - Keep all future feature plans under `docs/future-feats/`.
 - Give each future feature its own document. Other docs may link to that file,
   but must not duplicate its plan.
+- Keep unconfirmed design explorations under `docs/ideas/`. Do not list them in
+  `docs/TODO.md` unless the user promotes them to planned work.
 - Treat `docs/TODO.md` as the canonical plan and follow-up index. Update its
   status whenever a plan is added, implemented, narrowed to follow-up work, or
   deleted.
