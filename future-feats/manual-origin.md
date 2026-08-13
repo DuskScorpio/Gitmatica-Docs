@@ -4,7 +4,8 @@
 
 Manual-origin storage, Project Editor controls, Edit Project interaction,
 working/HEAD markers, and merge behavior are implemented. Pending-draft
-mutation blocking and the export behavior described below remain deferred.
+mutation blocking remains deferred. The export behavior described below is
+implemented.
 
 ## Model
 
@@ -101,12 +102,12 @@ projects whose local visibility setting is enabled.
 
 ## Export
 
-This section is planned and is not part of the current implementation.
+This flow is implemented.
 
 Every Gitmatica export opens a popup with:
 
 - An editable filename prefilled as `project-shortcommit.litematic`.
-- **Use Manual Origin**, unchecked each time.
+- **Export with Manual Origin**, unchecked each time.
 - Overwrite confirmation when the destination exists.
 
 Unchecked exports omit the explicit selection origin, making Litematica use the

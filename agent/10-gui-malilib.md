@@ -28,6 +28,10 @@ The local reference checkout is under
 - `LvcVersionDeleteWorkflow`: latest-version delete/undo flow.
 - `GuiLvcProjectCommandListeners`: button listeners.
 - `GuiLvcProjectEditor`: regions/origin editor.
+- `GuiLvcVersionExport`: exact-revision export screen built on Litematica's
+  schematic save browser.
+- `LvcExportWorkflow`: immutable export-target resolution and task
+  orchestration.
 - `GuiLvcChangeViewer`: live local/unsaved change inspection.
 - `WidgetLvcCommitHistoryList`, `WidgetLvcCommitMetadataPanel`: project screen
   history and metadata panels.

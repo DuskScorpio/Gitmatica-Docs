@@ -1,5 +1,10 @@
 # Version Export Flow
 
+## Implementation Status
+
+Implemented. Project Manager history entries and loaded Gitmatica overlays open
+the exact-revision Litematica save browser described below.
+
 ## Screen
 
 Every Gitmatica export action opens a screen extending Litematica's
