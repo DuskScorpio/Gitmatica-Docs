@@ -46,4 +46,10 @@ Change Viewer and world overlay.
 Manual move definition is outside the first version. Ambiguous structures must
 remain raw rather than being guessed.
 
+This viewer-only heuristic is separate from
+[rotation-aware project changes](rotation-aware-project-changes.md). Rotation
+is an explicit versioned site transform that changes capture, restore, merge,
+and overlay coordinate mapping; move detection only interprets ordinary
+coordinate-exact block differences after they occur.
+
 The prototype is isolated on `feat/move-detection` in commit `f34300a9`.
